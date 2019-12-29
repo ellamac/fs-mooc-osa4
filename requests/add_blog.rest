@@ -5,5 +5,5 @@ content-type: application/json
     "title": "matti",
   "author": "meikäläinen",
   "url": "https",
-  "likes": 10
+  "likes": 124
 }
