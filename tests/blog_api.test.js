@@ -8,6 +8,13 @@ const User = require('../models/user');
 
 describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
+    await User.remove({});
+
+    for (let user of helper.initialUsers) {
+      let userObject = new User(user);
+      await userObject.save();
+    }
+
     await Blog.remove({});
 
     for (let blog of helper.initialBlogs) {
@@ -44,13 +51,16 @@ describe('when there is initially some blogs saved', () => {
 
   describe('addition of a new blog', () => {
     test('succeeds with valid data ', async () => {
+      const usersAtStart = await helper.usersInDb();
+
       const newBlog = {
         id: '5a422b891b54a676234d17fa',
         title: 'First class tests',
         author: 'Robert C. Martin',
         url:
           'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-        likes: 10
+        likes: 10,
+        userId: usersAtStart[0].id
       };
 
       await api
@@ -67,11 +77,14 @@ describe('when there is initially some blogs saved', () => {
     });
 
     test('succeeds and sets likes to 0 if likes not defined', async () => {
+      const usersAtStart = await helper.usersInDb();
+
       const newBlog = {
         title: 'TDD harms architecture',
         author: 'Robert C. Martin',
         url:
-          'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html'
+          'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+        userId: usersAtStart[0].id
       };
 
       await api
@@ -84,11 +97,14 @@ describe('when there is initially some blogs saved', () => {
     });
 
     test('fails with status code 400 if title not defined', async () => {
+      const usersAtStart = await helper.usersInDb();
+
       const newBlog = {
         author: 'Robert C. Martin',
         url:
           'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-        likes: 1
+        likes: 1,
+        userId: usersAtStart[0].id
       };
 
       await api
@@ -101,10 +117,13 @@ describe('when there is initially some blogs saved', () => {
     });
 
     test('fails with status code 400 if url not defined', async () => {
+      const usersAtStart = await helper.usersInDb();
+
       const newBlog = {
         title: 'TDD harms architecture',
         author: 'Robert C. Martin',
-        likes: 1
+        likes: 1,
+        userId: usersAtStart[0].id
       };
 
       await api

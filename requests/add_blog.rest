@@ -4,5 +4,6 @@ content-type: application/json
 {
     "title": "YEEEEEEES",
     "author": "Robert C. Martin",
-    "url": "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html"
+    "url": "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    "userId": "5e142f809d0a7f044560f6a9"
 }

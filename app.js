@@ -1,10 +1,10 @@
 const config = require('./utils/config');
 const express = require('express');
+const blogsRouter = require('./controllers/blogs');
+const usersRouter = require('./controllers/users');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const blogsRouter = require('./controllers/blogs');
-const usersRouter = require('./controllers/users');
 const mongoose = require('mongoose');
 const logger = require('./utils/logger');
 
