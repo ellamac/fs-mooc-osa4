@@ -1,23 +1,35 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
 const usersRouter = require('express').Router();
+const User = require('../models/user');
 
-usersRouter.get('/', async (request, response) => {
+usersRouter.get('/', async (request, response, next) => {
   try {
     const users = await User.find({}).populate('blogs', {
+      url: 1,
       title: 1,
-      author: 1
+      author: 1,
+      id: 1
     });
     response.json(users.map(u => u.toJSON()));
   } catch (exception) {
-    response.status(400).json({ error: exception.message });
+    next(exception);
   }
 });
 
-usersRouter.post('/', async (request, response) => {
+usersRouter.post('/', async (request, response, next) => {
   try {
     const body = request.body;
 
+    if (!body.password) {
+      return response.status(400).json({
+        error: '`password` is required.'
+      });
+    }
+    if (body.password.length < 3) {
+      return response.status(400).json({
+        error: '`password` is shorter than the minimum allowed length (3).'
+      });
+    }
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
@@ -31,7 +43,7 @@ usersRouter.post('/', async (request, response) => {
 
     response.json(savedUser);
   } catch (exception) {
-    response.status(400).json({ error: exception.message });
+    next(exception);
   }
 });
 
